@@ -13,3 +13,6 @@ This is a basic HTTP Load Balancer built on Express.js
 * Clone the repo
 
 #### TODO
+* Multiple Ports/Listeners
+* Make app is more configurable from config file and not code
+* Show nicer errors when reaching wrong endpoint (move debug to production)
