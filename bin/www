@@ -8,11 +8,11 @@ var app = require('../app');
 var debug = require('debug')('my-lb:server');
 var http = require('http');
 
-/**
- * Get port from environment and store in Express.
- */
+var config = require('config');
+var listenerConfig = config.get('Global.Listener');
 
-var port = normalizePort(process.env.PORT || '3000');
+
+var port = normalizePort(listenerConfig.get('port'));
 app.set('port', port);
 
 /**

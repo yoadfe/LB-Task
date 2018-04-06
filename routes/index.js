@@ -19,7 +19,13 @@ const httpRequestDurationMicroseconds = new Prometheus.Histogram({
     buckets: [0.10, 5, 15, 50, 100, 200, 300, 400, 500]
 });
 
-serversList = ['http://localhost:3001/', 'http://localhost:3002/', 'http://localhost:3003/', 'http://localhost:3004/', 'http://localhost:3005/'];
+
+//Get configuration for LB
+let config = require('config');
+let lbConfig = config.get('Global.LB');
+
+//Get servers list from config
+let serversList = lbConfig.get('serversList');
 
 
 /**
@@ -52,13 +58,17 @@ proxy.use((req, res, next) => {
 //this sets rocky as a middleware so it will fetch the get req
 router.use(proxy.middleware());
 
+//get Endpoints from config
+let postEndpoints = lbConfig.get('postEndpoints');
+let getEndpoints = lbConfig.get('getEndpoints');
+
 //round-robin balance get requests
 proxy
-    .get('/login')
+    .get(`/:name(${getEndpoints})`)
     .balance(serversList);
 
 //forward post requests
-router.post('/register', function (req, res) {
+router.post(`/:name(${postEndpoints})`, function (req, res) {
     let responseSent = false;
     // Define proxy config params
     for (let i = 0, len = serversList.length; i < len; i++) {
