@@ -17,6 +17,7 @@
     "prom-client": "^11.0.0",
     "request": "^2.85.0",
     "requestretry": "^1.13.0",
+    "response-time": "^2.3.2",
     "rocky": "^0.4.15"
   }
 }

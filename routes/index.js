@@ -8,20 +8,11 @@ let proxy = rocky();
 // Set up request-rety module
 let request = require('requestretry');
 // Set up Prometheus client
-const Prometheus = require('prom-client');
-// Set up Config/Metrics
-const metricsInterval = Prometheus.collectDefaultMetrics();
-const httpRequestDurationMicroseconds = new Prometheus.Histogram({
-    name: 'http_request_duration_ms',
-    help: 'Duration of HTTP requests in ms',
-    labelNames: ['method', 'code'],
-    // buckets for response time from 0.1ms to 500ms
-    buckets: [0.10, 5, 15, 50, 100, 200, 300, 400, 500]
-});
-
-
+let Prometheus = require('../util/prometheus');
 //Get configuration for LB
 let config = require('config');
+
+//Global config section
 let lbConfig = config.get('Global.LB');
 
 //Get servers list from config
@@ -45,15 +36,19 @@ function exponentialBackoffStrategy() {
     };
 }
 
-// Runs before each request
-router.use((req, res, next) => {
-    res.locals.startEpoch = Date.now();
-    next()
-});
-proxy.use((req, res, next) => {
-    res.locals.startEpoch = Date.now();
-    next()
-});
+
+//Start the counter functions
+router.use(Prometheus.requestCounters);
+router.use(Prometheus.responseCounters);
+proxy.use(Prometheus.requestCounters);
+proxy.use(Prometheus.responseCounters);
+
+//enable metrics endpoint
+Prometheus.injectMetricsRoute(router);
+Prometheus.injectMetricsRoute(proxy);
+
+//Enable collection of default metrics
+Prometheus.startCollection();
 
 //this sets rocky as a middleware so it will fetch the get req
 router.use(proxy.middleware());
@@ -97,29 +92,6 @@ router.post(`/:name(${postEndpoints})`, function (req, res) {
             }
         );
     }
-});
-
-//expose metrics for Prometheus
-router.get('/metrics', (req, res) => {
-    res.set('Content-Type', Prometheus.register.contentType);
-    res.end(Prometheus.register.metrics())
-});
-
-// Runs after each request to collect metrics for the router endpoint
-router.use((req, res, next) => {
-    const responseTimeInMs = Date.now() - res.locals.startEpoch;
-    httpRequestDurationMicroseconds
-        .labels(req.method, req.route.path, res.statusCode)
-        .observe(responseTimeInMs);
-    next()
-});
-// Runs after each request to collect metrics for the rocky proxy endpoint
-proxy.use((req, res, next) => {
-    const responseTimeInMs = Date.now() - res.locals.startEpoch;
-    httpRequestDurationMicroseconds
-        .labels(req.method, res.statusCode)
-        .observe(responseTimeInMs);
-    next()
 });
 
 module.exports = router;
