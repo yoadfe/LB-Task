@@ -19,7 +19,7 @@ This is a basic HTTP Load Balancer built on Express.js
   - serversList: A backend servers array
   - postEndpoints - Endpoints for load balancer POST method, seperated by PIPE (See example inside the config file)
   - getEndpoints - Same as post endpoints, just for GET method
-
+- Run with
 #### How to test?
 Inside the Tester folder the is a simple python web server, run it with:
 
