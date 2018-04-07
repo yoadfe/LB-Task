@@ -14,7 +14,7 @@
 
 #### Prerequisites
 - Node.js (This was developed and tested on version 8, so use that please :))
-- Python 3 for the testing the listener webserver
+- Python 3 for the testing-listener webserver
 
 #### How to use?
 - Clone the repo
