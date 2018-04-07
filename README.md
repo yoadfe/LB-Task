@@ -1,5 +1,9 @@
 # Node LB
-This is a basic HTTP Load Balancer built on Express.js
+<p align="center">
+  <b>A basic HTTP Load Balancer built on Express.js</b>
+  <br>
+  <img align="center" width="100%" height="100%" src="Diagram.png">
+</p>
 
 ### The Load Balancer
 - Based on Express.js as the server framework
