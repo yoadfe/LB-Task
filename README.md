@@ -10,15 +10,15 @@ This is a basic HTTP Load Balancer built on Express.js
 
 #### Prerequisites
 - Node.js (This was developed and tested on version 8, so use that please :))
-- Python 3 for the testing webserver
+- Python 3 for the testing listener webserver
 
 #### How to use?
 - Clone the repo
 - Set the config file located at config/default.json:
-  - port: the port the load balancer should listen on
-  - serversList: backend servers
-  - postEndpoints - endpoints for load balancer POST method, seperated by PIPE (See example inside the config file)
-  - getEndpoints - same as post endpoints, just for GET method
+  - port: The port the load balancer should listen on
+  - serversList: A backend servers array
+  - postEndpoints - Endpoints for load balancer POST method, seperated by PIPE (See example inside the config file)
+  - getEndpoints - Same as post endpoints, just for GET method
 
 #### How to test?
 Inside the Tester folder the is a simple python web server, run it with:
