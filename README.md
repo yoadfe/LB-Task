@@ -3,7 +3,7 @@ This is a basic HTTP Load Balancer built on Express.js
 
 ### The Load Balancer
 - Based on Express.js as the server framework
-- Get requests are being balanced with a round-robin method, using rocky proxy (https://github.com/h2non/rocky)
+- Get requests are balanced with a round-robin method, using rocky proxy (https://github.com/h2non/rocky)
 - Post requests are forwarded to All servers, returning response from first server available
 - If one of the servers is unavailable during the post request, an infinite retries will be conducted, using an exponential back-off interval - with the help of request-retry module and custom code (https://github.com/FGRibreau/node-request-retry)
 - Metrics are exposed for Prometheus using prom-client (https://github.com/siimon/prom-client) and are available at /metrics endpoint
@@ -22,7 +22,7 @@ This is a basic HTTP Load Balancer built on Express.js
 - Eventually - Run with: npm start
 
 #### How to test?
-- Inside the Tester folder the is a simple python web server, you can use that or any other servers you'd like:
+- Inside the Tester folder there is a simple python web server, you can use that or any other backend servers you'd like:
   - Cd into the Tester folder
   - Run with: python3 SimpleWebServer.py <port>
   - Run as many instances as you want to test(using different ports of course)
@@ -34,5 +34,8 @@ This is a basic HTTP Load Balancer built on Express.js
 - Multiple Ports/Listeners
 - Make app is more configurable from config file and not code
 - Show nicer errors when reaching wrong endpoint (move debug to production)
+- Show spinner on retrying post
 - Implement some kind of multicast http in the forwarding method instead of sequential loop (if possible)
 - Make testing easier - One console with many ports, send all results to one console/log file
+- Config validation
+- Dockerize
