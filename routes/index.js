@@ -65,7 +65,11 @@ let getEndpoints = lbConfig.get('getEndpoints');
 //round-robin balance get requests
 proxy
     .get(`/:name(${getEndpoints})`)
-    .balance(serversList);
+    .balance(serversList)
+    .use(function (req, res, next) {
+        console.log(`GET Request from ${res.connection.remoteAddress}, Response code ${res.statusCode}`);
+        next()
+    });
 
 //forward post requests
 router.post(`/:name(${postEndpoints})`, function (req, res) {
@@ -88,7 +92,7 @@ router.post(`/:name(${postEndpoints})`, function (req, res) {
                         res.sendStatus(201);
                         responseSent = true;
                     }
-                    console.log(response.statusCode);
+                    console.log(`Post Request, Response code from ${serversList[i]}: ${response.statusCode}`);
                 }
             }
         );
